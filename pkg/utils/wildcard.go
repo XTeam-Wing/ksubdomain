@@ -86,11 +86,12 @@ func FilterWildCard(results []result.Result) []result.Result {
 
 		// 计算该IP解析占总体的百分比
 		percentage := float64(count) / float64(totalDomains) * 100
-
 		// 动态阈值：根据总域名数量调整
 		// 域名数量少时阈值较高，域名数量多时阈值较低
 		var threshold float64
-		if totalDomains < 100 {
+		if totalDomains < 50 {
+			threshold = 80 // 如果域名总数小于50，阈值设为80%
+		} else if totalDomains < 100 {
 			threshold = 30 // 如果域名总数小于100，阈值设为30%
 		} else if totalDomains < 1000 {
 			threshold = 20 // 如果域名总数在100-1000，阈值设为20%
@@ -103,7 +104,7 @@ func FilterWildCard(results []result.Result) []result.Result {
 
 		// 如果超过阈值，标记为可疑IP
 		if percentage > threshold || count > absoluteThreshold {
-			gologger.Debugf("发现可疑泛解析IP: %s (解析了 %d 个域名, %.2f%%)\n",
+			gologger.Infof("发现可疑泛解析IP: %s (解析了 %d 个域名, %.2f%%)\n",
 				ip, count, percentage)
 			suspiciousIPs[ip] = true
 		}
@@ -140,7 +141,7 @@ func FilterWildCard(results []result.Result) []result.Result {
 		}
 	}
 
-	gologger.Infof("泛解析过滤完成，从 %d 条记录中过滤出 %d 条有效记录\n",
+	gologger.Debugf("泛解析过滤完成，从 %d 条记录中过滤出 %d 条有效记录\n",
 		totalDomains, len(filteredResults))
 
 	return filteredResults
