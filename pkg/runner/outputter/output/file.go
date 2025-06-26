@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/boy-hack/ksubdomain/v2/pkg/runner/result"
-
 	"github.com/boy-hack/ksubdomain/v2/pkg/utils"
 )
 
@@ -31,7 +30,10 @@ func (f *FileOutPut) WriteDomainResult(domain result.Result) error {
 	var msg string
 	var domains []string = []string{domain.Subdomain}
 	for _, item := range domain.Answers {
-		domains = append(domains, item)
+		if len(item.Value) == 0 {
+			continue
+		}
+		domains = append(domains, item.Value...)
 	}
 	msg = strings.Join(domains, "=>")
 	_, err := f.output.WriteString(msg + "\n")
@@ -44,7 +46,7 @@ func (f *FileOutPut) Close() error {
 	buf := strings.Builder{}
 	for _, item := range results {
 		buf.WriteString(item.Subdomain + "=>")
-		buf.WriteString(strings.Join(item.Answers, "=>"))
+		buf.WriteString(strings.Join(item.Answers[0].Value, "=>"))
 		buf.WriteString("\n")
 	}
 	err := os.WriteFile(f.filename, []byte(buf.String()), 0664)

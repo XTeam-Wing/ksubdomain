@@ -1,10 +1,11 @@
 package utils
 
 import (
-	"github.com/boy-hack/ksubdomain/v2/pkg/core/gologger"
-	"github.com/boy-hack/ksubdomain/v2/pkg/runner/result"
 	"sort"
 	"strings"
+
+	"github.com/boy-hack/ksubdomain/v2/pkg/core/gologger"
+	"github.com/boy-hack/ksubdomain/v2/pkg/runner/result"
 )
 
 type Pair struct {
@@ -62,10 +63,10 @@ func FilterWildCard(results []result.Result) []result.Result {
 	for _, res := range results {
 		for _, answer := range res.Answers {
 			// 跳过非IP的记录(CNAME等)
-			if !strings.HasPrefix(answer, "CNAME ") && !strings.HasPrefix(answer, "NS ") &&
-				!strings.HasPrefix(answer, "TXT ") && !strings.HasPrefix(answer, "PTR ") {
-				ipFrequency[answer]++
-				ipToDomains[answer] = append(ipToDomains[answer], res.Subdomain)
+			if !strings.HasPrefix(answer.Type, "CNAME ") && !strings.HasPrefix(answer.Type, "NS ") &&
+				!strings.HasPrefix(answer.Type, "TXT ") && !strings.HasPrefix(answer.Type, "PTR ") {
+				ipFrequency[answer.Value[0]]++
+				ipToDomains[answer.Value[0]] = append(ipToDomains[answer.Value[0]], res.Subdomain)
 			}
 		}
 	}
@@ -115,15 +116,15 @@ func FilterWildCard(results []result.Result) []result.Result {
 		// 检查该域名的所有IP是否均为可疑IP
 		// 如果有不可疑的IP，保留该记录
 		validRecord := false
-		var filteredAnswers []string
+		var filteredAnswers []result.Answer
 
 		for _, answer := range res.Answers {
 			// 保留所有非IP记录(如CNAME)
-			if strings.HasPrefix(answer, "CNAME ") || strings.HasPrefix(answer, "NS ") ||
-				strings.HasPrefix(answer, "TXT ") || strings.HasPrefix(answer, "PTR ") {
+			if strings.HasPrefix(answer.Type, "CNAME ") || strings.HasPrefix(answer.Type, "NS ") ||
+				strings.HasPrefix(answer.Type, "TXT ") || strings.HasPrefix(answer.Type, "PTR ") {
 				validRecord = true
 				filteredAnswers = append(filteredAnswers, answer)
-			} else if !suspiciousIPs[answer] {
+			} else if !suspiciousIPs[answer.Value[0]] {
 				// 保留不在可疑IP列表中的IP
 				validRecord = true
 				filteredAnswers = append(filteredAnswers, answer)
@@ -184,9 +185,9 @@ func FilterWildCardAdvanced(results []result.Result) []result.Result {
 		}
 
 		for _, answer := range res.Answers {
-			if strings.HasPrefix(answer, "CNAME ") {
+			if strings.HasPrefix(answer.Type, "CNAME ") {
 				// 提取CNAME目标
-				cnameParts := strings.SplitN(answer, " ", 2)
+				cnameParts := strings.SplitN(answer.Value[0], " ", 2)
 				if len(cnameParts) == 2 {
 					cnameTarget := cnameParts[1]
 					cnameRecords[subdomain] = append(cnameRecords[subdomain], cnameTarget)
@@ -195,26 +196,26 @@ func FilterWildCardAdvanced(results []result.Result) []result.Result {
 			}
 
 			// 只处理IP记录
-			if !strings.HasPrefix(answer, "NS ") &&
-				!strings.HasPrefix(answer, "TXT ") &&
-				!strings.HasPrefix(answer, "PTR ") {
+			if !strings.HasPrefix(answer.Type, "NS ") &&
+				!strings.HasPrefix(answer.Type, "TXT ") &&
+				!strings.HasPrefix(answer.Type, "PTR ") {
 				// 计数IP频率
-				ipFrequency[answer]++
+				ipFrequency[answer.Value[0]]++
 
 				// 初始化IP的前缀集合和TLD集合
-				if ipPrefixVariety[answer] == nil {
-					ipPrefixVariety[answer] = make(map[string]bool)
+				if ipPrefixVariety[answer.Value[0]] == nil {
+					ipPrefixVariety[answer.Value[0]] = make(map[string]bool)
 				}
-				if ipTLDVariety[answer] == nil {
-					ipTLDVariety[answer] = make(map[string]bool)
+				if ipTLDVariety[answer.Value[0]] == nil {
+					ipTLDVariety[answer.Value[0]] = make(map[string]bool)
 				}
 
 				// 记录这个IP解析了哪些不同的前缀和TLD
-				ipPrefixVariety[answer][prefix] = true
-				ipTLDVariety[answer][tld] = true
+				ipPrefixVariety[answer.Value[0]][prefix] = true
+				ipTLDVariety[answer.Value[0]][tld] = true
 
 				// 记录IP到域名的映射
-				ipToDomains[answer] = append(ipToDomains[answer], subdomain)
+				ipToDomains[answer.Value[0]] = append(ipToDomains[answer.Value[0]], subdomain)
 			}
 		}
 	}
@@ -318,19 +319,19 @@ func FilterWildCardAdvanced(results []result.Result) []result.Result {
 		}
 
 		validRecord := !hasSuspiciousCname
-		var filteredAnswers []string
+		var filteredAnswers []result.Answer
 
 		// 处理所有回答
 		for _, answer := range res.Answers {
-			isIP := !strings.HasPrefix(answer, "CNAME ") &&
-				!strings.HasPrefix(answer, "NS ") &&
-				!strings.HasPrefix(answer, "TXT ") &&
-				!strings.HasPrefix(answer, "PTR ")
+			isIP := !strings.HasPrefix(answer.Type, "CNAME ") &&
+				!strings.HasPrefix(answer.Type, "NS ") &&
+				!strings.HasPrefix(answer.Type, "TXT ") &&
+				!strings.HasPrefix(answer.Type, "PTR ")
 
 			// 保留所有非IP记录但排除可疑CNAME
 			if !isIP {
-				if strings.HasPrefix(answer, "CNAME ") {
-					cnameParts := strings.SplitN(answer, " ", 2)
+				if strings.HasPrefix(answer.Type, "CNAME ") {
+					cnameParts := strings.SplitN(answer.Type, " ", 2)
 					if len(cnameParts) == 2 && suspiciousCnames[cnameParts[1]] {
 						continue // 跳过可疑CNAME
 					}
@@ -339,7 +340,7 @@ func FilterWildCardAdvanced(results []result.Result) []result.Result {
 				filteredAnswers = append(filteredAnswers, answer)
 			} else {
 				// 针对IP记录，根据可疑度评分过滤
-				suspiciousScore, isSuspicious := suspiciousIPs[answer]
+				suspiciousScore, isSuspicious := suspiciousIPs[answer.Value[0]]
 
 				// 如果不在可疑IP列表中，或者可疑度较低，则保留
 				if !isSuspicious || suspiciousScore < 50 {

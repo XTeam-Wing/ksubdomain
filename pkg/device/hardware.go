@@ -1,9 +1,10 @@
 package device
 
 import (
+	"net"
+
 	"github.com/boy-hack/ksubdomain/v2/pkg/core/gologger"
 	"gopkg.in/yaml.v3"
-	"net"
 )
 
 type SelfMac net.HardwareAddr

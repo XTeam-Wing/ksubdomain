@@ -6,10 +6,6 @@ import (
 	"fmt"
 	"strings"
 
-	// "os/exec" // No longer needed
-	// "bytes" // No longer needed
-	// "syscall" // No longer needed
-
 	"github.com/StackExchange/wmi" // 需要添加这个依赖
 )
 

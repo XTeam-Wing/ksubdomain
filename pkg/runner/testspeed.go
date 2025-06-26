@@ -1,11 +1,12 @@
 package runner
 
 import (
+	"net"
+	"time"
+
 	"github.com/boy-hack/ksubdomain/v2/pkg/core/gologger"
 	"github.com/boy-hack/ksubdomain/v2/pkg/device"
 	"github.com/phayes/freeport"
-	"net"
-	"time"
 )
 
 func TestSpeed(ether *device.EtherTable) {

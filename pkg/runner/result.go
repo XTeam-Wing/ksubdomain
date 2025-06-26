@@ -56,10 +56,13 @@ func (r *Runner) predict(res result.Result, predictChan chan string) error {
 }
 
 // checkWildIps 检查是否为通配符IP
-func checkWildIps(wildIps []string, ip []string) bool {
+func checkWildIps(wildIps []string, answers []result.Answer) bool {
 	for _, w := range wildIps {
-		for _, i := range ip {
-			if w == i {
+		for _, a := range answers {
+			if len(a.Value) == 0 {
+				continue
+			}
+			if w == a.Value[0] {
 				return true
 			}
 		}

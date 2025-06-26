@@ -22,7 +22,7 @@ func dnsRecord2String(rr layers.DNSResourceRecord) (string, string, error) {
 		switch rr.Type {
 		case layers.DNSTypeA, layers.DNSTypeAAAA:
 			if rr.IP != nil {
-				return string(rr.Type), rr.IP.String(), nil
+				return "A", rr.IP.String(), nil
 			}
 		case layers.DNSTypeNS:
 			if rr.NS != nil {
@@ -189,7 +189,7 @@ func (r *Runner) recvChanel(ctx context.Context, wg *sync.WaitGroup) {
 						atomic.AddUint64(&r.successCount, 1)
 						var answers []result.Answer
 						for _, v := range dns.Answers {
-							answerType,answer, err := dnsRecord2String(v)
+							answerType, answer, err := dnsRecord2String(v)
 							if err != nil {
 								continue
 							}

@@ -6,7 +6,6 @@ import (
 
 	"github.com/boy-hack/ksubdomain/v2/pkg/core/gologger"
 	"github.com/boy-hack/ksubdomain/v2/pkg/runner/result"
-
 	"github.com/boy-hack/ksubdomain/v2/pkg/utils"
 )
 

@@ -1,10 +1,10 @@
 package options
 
 import (
-	device2 "github.com/boy-hack/ksubdomain/v2/pkg/device"
 	"strconv"
 
 	"github.com/boy-hack/ksubdomain/v2/pkg/core/gologger"
+	device2 "github.com/boy-hack/ksubdomain/v2/pkg/device"
 	"github.com/boy-hack/ksubdomain/v2/pkg/runner/outputter"
 	"github.com/boy-hack/ksubdomain/v2/pkg/runner/processbar"
 )

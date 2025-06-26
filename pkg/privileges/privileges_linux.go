@@ -3,10 +3,12 @@
 package privileges
 
 import (
-	"golang.org/x/sys/unix"
 	"os"
 	"runtime"
+
 	"x-agent/pkg/privileges/israce"
+
+	"golang.org/x/sys/unix"
 )
 
 // isPrivileged checks if the current process has the CAP_NET_RAW capability or is root

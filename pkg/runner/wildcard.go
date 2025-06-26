@@ -1,8 +1,9 @@
 package runner
 
 import (
-	"github.com/boy-hack/ksubdomain/v2/pkg/core"
 	"net"
+
+	"github.com/boy-hack/ksubdomain/v2/pkg/core"
 )
 
 func IsWildCard(domain string) (bool, []string) {

@@ -2,8 +2,9 @@ package ns
 
 import (
 	"errors"
-	"github.com/miekg/dns"
 	"net"
+
+	"github.com/miekg/dns"
 )
 
 // LookupNS returns the names servers for a domain.

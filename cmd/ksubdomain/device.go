@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/boy-hack/ksubdomain/v2/pkg/device"
 
 	"github.com/boy-hack/ksubdomain/v2/pkg/core/gologger"
+	"github.com/boy-hack/ksubdomain/v2/pkg/device"
 	"github.com/urfave/cli/v2"
 )
 

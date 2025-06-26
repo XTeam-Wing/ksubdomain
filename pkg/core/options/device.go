@@ -1,10 +1,11 @@
 package options
 
 import (
+	"os"
+
 	core2 "github.com/boy-hack/ksubdomain/v2/pkg/core"
 	"github.com/boy-hack/ksubdomain/v2/pkg/core/gologger"
 	"github.com/boy-hack/ksubdomain/v2/pkg/device"
-	"os"
 )
 
 // GetDeviceConfig 获取网卡配置信息

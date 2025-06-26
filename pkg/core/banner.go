@@ -2,6 +2,7 @@ package core
 
 import (
 	"fmt"
+
 	"github.com/boy-hack/ksubdomain/v2/pkg/core/conf"
 	"github.com/boy-hack/ksubdomain/v2/pkg/core/gologger"
 )
