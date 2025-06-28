@@ -12,7 +12,7 @@ import (
 	"github.com/boy-hack/ksubdomain/v2/pkg/runner/statusdb"
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
-	"github.com/google/gopacket/pcap"
+	"github.com/yaklang/pcap"
 )
 
 // packetTemplateCache 缓存DNS服务器的包模板

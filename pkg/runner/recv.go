@@ -13,7 +13,7 @@ import (
 	"github.com/boy-hack/ksubdomain/v2/pkg/runner/result"
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
-	"github.com/google/gopacket/pcap"
+	"github.com/yaklang/pcap"
 )
 
 // dnsRecord2String 将DNS记录转换为字符串

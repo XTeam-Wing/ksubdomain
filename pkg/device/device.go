@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/boy-hack/ksubdomain/v2/pkg/core/gologger"
-	"github.com/google/gopacket/pcap"
+	"github.com/yaklang/pcap"
 	"gopkg.in/yaml.v3"
 )
 

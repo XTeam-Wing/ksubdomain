@@ -16,8 +16,8 @@ import (
 	"github.com/boy-hack/ksubdomain/v2/pkg/runner/processbar"
 	"github.com/boy-hack/ksubdomain/v2/pkg/runner/result"
 	"github.com/boy-hack/ksubdomain/v2/pkg/runner/statusdb"
-	"github.com/google/gopacket/pcap"
 	"github.com/phayes/freeport"
+	"github.com/yaklang/pcap"
 	"go.uber.org/ratelimit"
 )
 
