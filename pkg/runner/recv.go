@@ -115,6 +115,9 @@ func (r *Runner) processPacket(data []byte, dnsChanel chan<- layers.DNS) {
 	// 向处理通道发送DNS响应
 	select {
 	case dnsChanel <- *dc.dns:
+	default:
+		// 通道可能已关闭或已满，忽略此包
+		return
 	}
 }
 
@@ -258,9 +261,13 @@ func (r *Runner) recvChanel(ctx context.Context, wg *sync.WaitGroup) {
 
 	// 关闭通道
 	close(packetChan)
+
+	// 等待所有解析协程结束（它们可能还在调用processPacket）
+	parserWg.Wait()
+
+	// 现在安全地关闭dnsChanel
 	close(dnsChanel)
 
-	// 等待所有处理和解析协程结束
-	parserWg.Wait()
+	// 等待所有处理协程结束
 	processorWg.Wait()
 }
